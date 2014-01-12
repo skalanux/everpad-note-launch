@@ -43,7 +43,7 @@ def search_all(search, results):
         100, Note.ORDER_TITLE, -1):
 
         note = Note.from_tuple(note_struct)
-        #results.append(json.dumps({'id': note.id, 'search': search}))
+        # TODO: Fix so it can return system lang encoding
         results.append(u"%s|%s" % (note.id, note.title.encode('ascii', errors="replace")))
 
 # dmenu constants
@@ -68,7 +68,7 @@ output = []
 
 try:
     search_all("", output)
-    output.sort()
+    output.sort(key=lambda note: note.split("|")[1].upper())
 except Exception, e:
     pass
 
