@@ -36,15 +36,20 @@ gettext.textdomain('everpad')
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 provider = get_provider()
 
+
+SPLIT_CHARACTER = " >>> "
+
 def search_all(search, results):
     for note_struct in provider.find_notes(
         search, dbus.Array([], signature='i'),
         dbus.Array([], signature='i'), 0,
         100, Note.ORDER_TITLE, -1):
-
         note = Note.from_tuple(note_struct)
         # TODO: Fix so it can return system lang encoding
-        results.append(u"%s|%s" % (note.id, note.title.encode('ascii', errors="replace")))
+        tags = ", ".join([tag.title().encode('ascii', errors="replace") for tag in  note.tags])
+        results.append(u"%s%s%s%s%s" % (note.id, SPLIT_CHARACTER, tags,
+                                        SPLIT_CHARACTER,
+                                        note.title.encode('ascii', errors="replace")))
 
 # dmenu constants
 DMENU_CACHE = os.path.expanduser('~/.dmenu_cache')
@@ -68,7 +73,7 @@ output = []
 
 try:
     search_all("", output)
-    output.sort(key=lambda note: note.split("|")[1].upper())
+    output.sort(key=lambda note: note.split(SPLIT_CHARACTER)[2].upper())
 except Exception, e:
     pass
 
@@ -78,5 +83,5 @@ selection = process.communicate(input='{0}\n{1}'.format('\n'.join(output), syste
 
 # get notes based on selection and open it or create a new one
 if selection.strip() != '':
-    note_id = selection.split("|")[0]
+    note_id = selection.split(SPLIT_CHARACTER)[0]
     call(['everpad', '--open', note_id])
