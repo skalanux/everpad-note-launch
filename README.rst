@@ -6,7 +6,7 @@ Simple command that interacts via DBUS with everpad and provides a list of notes
 Requirements:
 -------------
 
-- An up-to-date version of dmenu (at least 4.5) installed on your system if you are using it on Ubuntu 12.04 you can get the apt package from the i3 `repository <http://i3wm.org/docs/repositories.html>`_
+- An up-to-date version of dmenu (at least 4.5) installed on your system if you are using it on Ubuntu 12.04 or higher you can get the apt package from the i3 `repository <http://i3wm.org/docs/repositories.html>`_
 
 - You need to have `everpad <https://github.com/nvbn/everpad>`_ installed and linked to your evernote account.
 
